@@ -4,3 +4,5 @@ git：
 
 
 云主机：
+dns:babydairy3816.cloudapp.net
+用户名：vadmin

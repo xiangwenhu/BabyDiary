@@ -1,0 +1,8 @@
+连接云主机：
+http://www.linuxidc.com/Linux/2015-05/117834.htm
+
+安装桌面：
+https://docs.microsoft.com/en-us/azure/virtual-machines/virtual-machines-linux-classic-remote-desktop
+
+Linux下安装nodejs:
+http://www.linuxidc.com/Linux/2016-07/133541.htm
