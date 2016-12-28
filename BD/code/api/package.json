@@ -1,5 +1,5 @@
 {
- "name": "mplayer",
+  "name": "babydairy",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,6 +13,7 @@
     "koa-session2": "^1.0.8",
     "koa-static": "^3.0.0",
     "koa-views": "^5.2.0",
+    "mongoose": "^4.7.5",
     "request": "^2.79.0",
     "vue": "^2.1.6",
     "vue-router": "^2.1.0",
