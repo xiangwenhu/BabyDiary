@@ -1,12 +1,12 @@
 const Koa = require('koa')
-const koaStatic  = require('koa-static') 
-const path = require('path')
-const views  = require('koa-views')
 const bodyparser  = require('koa-bodyparser')
 const routes = require('./routes')
+const mongoose = require('mongoose')
 
 const app = new Koa()
 
+
+mongoose.connect('mongodb://127.0.0.1:27017/babydairy')
 //bodyparser
 app.use(bodyparser())
 
@@ -27,7 +27,6 @@ app.use(async (ctx, next) => {
         }
     }
   } catch (err) {
-    let status = err.status || 500
     ctx.body = {
         code:500, 
         msg:'服务器内部错误'      
