@@ -3,19 +3,24 @@ let Schema = mongoose.Schema
 
 let userSchema = new Schema({
   phone: String,
+  age:{
+    type:Number,
+    min:0,
+    max:150
+  },
   type: Number,
-  createTime: Date,
-  updateTime: Date,
+  createTime: {type:Date,default:Date.now},
+  updateTime: {type:Date,default:Date.now},
   version: Number,
   email: String,
-  isEmailVerified: Boolean,
+  isEmailVerified: {type:Boolean,default:false},
   userName: String,
   preLoginTime: Date,
   lastLoginTime: Date,
   preTokenRefreshTime: Date,
   tokenRefreshTime: Date,
-  failedLoginCount: Number,
-  isDelete: Boolean,
+  failedLoginCount: {type:Number,default:0},
+  isDelete:  {type:Boolean,default:false},  
   address: {
     province:String,
     city:String,
