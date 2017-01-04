@@ -4,30 +4,34 @@
  * @flow
  */
 
-import React, { Component } from 'react';
+import React from 'react'
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
-} from 'react-native';
+  View,
+  Navigator
+} from 'react-native'
+import Register from './src/components/user/Register'
+import NavigationBarRouteMapper from './src/components/public/NavigationBarRouteMapper'
 
-export default class BabyDairy extends Component {
+export default class BabyDairy extends React.Component {
   render() {
+    let defaultName = 'login'
+    let defaultComponent = Register
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
+      <Navigator
+        initialRoute={{ name: defaultName, component: defaultComponent }}
+        configureScene={() => {
+          return Navigator.SceneConfigs.VerticalDownSwipeJump
+        }}
+        renderScene={(route, navigator) => {
+          let Component = route.component
+          return <Component {...route.params} navigator={navigator} />
+        }}
+        navigationBar={<Navigator.NavigationBar routeMapper={NavigationBarRouteMapper} /> }
+        />
+    )
   }
 }
 
@@ -48,6 +52,6 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});
+})
 
-AppRegistry.registerComponent('BabyDairy', () => BabyDairy);
+AppRegistry.registerComponent('BabyDairy', () => BabyDairy)
