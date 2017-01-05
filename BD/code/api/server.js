@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 const app = new Koa()
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/babydairy')
+mongoose.connect('mongodb://127.0.0.1:27017/babydiary')
 //bodyparser
 app.use(bodyparser())
 

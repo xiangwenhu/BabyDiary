@@ -3,6 +3,7 @@ let Schema = mongoose.Schema
 
 let userSchema = new Schema({
   phone: String,
+  pwd: String,
   age:{
     type:Number,
     min:0,
