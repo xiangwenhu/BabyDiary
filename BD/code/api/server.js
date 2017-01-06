@@ -1,12 +1,15 @@
 const Koa = require('koa')
-const bodyparser  = require('koa-bodyparser')
+const bodyparser = require('koa-bodyparser')
 const routes = require('./routes')
 const mongoose = require('mongoose')
 
 const app = new Koa()
 
+mongoose.Promise = global.Promise  //设置promise
 
-mongoose.connect('mongodb://127.0.0.1:27017/babydiary')
+mongoose.connect('mongodb://127.0.0.1:27017/babydiary', {}, () => {
+  console.log()
+})
 //bodyparser
 app.use(bodyparser())
 
@@ -21,27 +24,27 @@ app.use(async (ctx, next) => {
   try {
     await next()
     if (ctx.status === 404) {
-        ctx.body = {
-            code:404, 
-            msg:'404 未找到'      
-        }
+      ctx.body = {
+        code: 404,
+        msg: '404 未找到'
+      }
     }
   } catch (err) {
     ctx.body = {
-        code:500, 
-        msg:'服务器内部错误'      
+      code: 500,
+      msg: '服务器内部错误'
     }
     console.log(err)
   }
 })
 
 
-app.use(async (ctx,next)=>{
-    await next()
-    ctx.set('Access-Control-Allow-Origin', '*')
-    ctx.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-    ctx.set('Access-Control-Allow-Headers', 'Content-Type')
-}) 
+app.use(async (ctx, next) => {
+  await next()
+  ctx.set('Access-Control-Allow-Origin', '*')
+  ctx.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type')
+})
 
 // x-response-time
 app.use(async function (ctx, next) {
