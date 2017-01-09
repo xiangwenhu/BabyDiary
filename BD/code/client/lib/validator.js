@@ -51,8 +51,7 @@ class Validator {
     /**验证数据
      * */
     static validate(data, mapping) {
-        let rules = Validator.rules,
-            ret = {
+        let ret = {
                 status: true
             }
         if (mapping && mapping instanceof Object) {
@@ -60,7 +59,7 @@ class Validator {
                 let curMsgs = mapping[m].messages, //获取自定义的消息
                     val = Validator.getPropVal(data, m)
                 //遍历所有的rule，格式为 require|phone
-                mapping[m].rules.split('\|').every(r => (ret = Validator.validateStr(val, r, curMsgs ? curMsgs[r] : undefined)).status ? true : false)
+                mapping[m].rules.split('\|').every(r => (ret = Validator.validateSingleRule(val, r, curMsgs ? curMsgs[r] : undefined)).status ? true : false)
                 if (!ret.status) {
                     return ret
                 }
@@ -69,8 +68,23 @@ class Validator {
         return ret
     }
 
-    //单条验证
-    static validateStr(str, ruleName, msg) {
+
+   //验证多条规则
+   static validateMultiRule(str,ruleNames,messages){
+       let ret = {status:true}
+       if(!ruleNames){
+           return {
+               status:false,
+               message:'传入的rules为空'
+           }
+       }
+       let rules = ruleNames.split('\|')       
+       rules.every(r => (ret = Validator.validateSingleRule(str, r, messages ? messages[r] : undefined)).status ? true : false)
+       return ret
+   }
+
+    //验证单挑规则
+    static validateSingleRule(str, ruleName, msg) {
         let rule = Validator.rules[ruleName] //获得rule
         if (!rule) {
             return {
@@ -90,7 +104,7 @@ class Validator {
 
     static getPropVal(data, propName) {
         let val = data
-        propName.split('.').forEach(function (v, i) {
+        propName.split('.').forEach(function (v) {
             val = val[v]
         })
         return val
@@ -99,7 +113,7 @@ class Validator {
 
 Validator.rules = {
     require: {
-        method: str => !(str == undefined || str.trim() == "")
+        method: str => !(str == undefined || str.trim() == '')
     },
     phone: {
         method: str => /^1(3\d|4(7)|5(0|1|2|3|5|6|7|8|9)|68|7(0|3|6|7|8)|8\d)\d{8}$/.test(str),
@@ -115,5 +129,6 @@ Validator.defaultMessages = {
     phone: '请输入正确的手机号码',
     age: '请输入正确的年龄'
 }
+
 
 module.exports = Validator
