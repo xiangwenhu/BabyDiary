@@ -79,26 +79,32 @@ class Validator {
            }
        }
        let rules = ruleNames.split('\|')       
-       rules.every(r => (ret = Validator.validateSingleRule(str, r, messages ? messages[r] : undefined)).status ? true : false)
+       rules.every(r => (ret = Validator.validateSingleRule(str, r, messages ? messages[r.split(':')[0]] : undefined)).status ? true : false)
        return ret
    }
 
     //验证单挑规则
+    // ruleName min:6 后面为参数
     static validateSingleRule(str, ruleName, msg) {
-        let rule = Validator.rules[ruleName] //获得rule
+        let rName = ruleName.split(':')[0],  
+            par = undefined,       
+            rule = Validator.rules[rName] //获得rule
         if (!rule) {
             return {
                 status: false,
-                message: `未找到验证规则${ruleName}`
+                message: `未找到验证规则${rName}`
             }
         }
-        let pass = rule.method(str)
+        if(ruleName.split(':').length > 0){
+            par = ruleName.split(':').slice(1)
+        }
+        let pass = rule.method(str, ...new Set(par))
         if (pass) {
             return { status: true }
         }
         return {
             status: false,
-            message: msg || rule.message || Validator.defaultMessages[ruleName] || `未定义规则为${ruleName}的消息`
+            message: msg || rule.message || Validator.defaultMessages[rName] || `未定义规则为${rName}的消息`
         }
     }
 
@@ -117,11 +123,16 @@ Validator.rules = {
     },
     phone: {
         method: str => /^1(3\d|4(7)|5(0|1|2|3|5|6|7|8|9)|68|7(0|3|6|7|8)|8\d)\d{8}$/.test(str),
-        message: '我的手机号码？？？'
+        message: '请输入正确的手机号码'
     },
     province: {
         method: str => str.length <= 5
-    }
+    },
+    min:{
+        method:(str,length) =>{
+            return str.length >= length
+        }
+    }    
 }
 
 Validator.defaultMessages = {
