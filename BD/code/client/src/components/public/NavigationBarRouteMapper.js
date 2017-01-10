@@ -29,8 +29,7 @@ export default {
     Title() {
         return (
             <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }}>
-                <Text style={{ color: 'red', margin: 10, fontSize: 16 }}>
-                    Data Entry
+                <Text style={{ color: 'white', margin: 10, fontSize: 16 }}>                   
                 </Text>
             </TouchableOpacity>
         )

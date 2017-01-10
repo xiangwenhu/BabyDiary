@@ -61,6 +61,8 @@ class Validator {
                 //遍历所有的rule，格式为 require|phone
                 mapping[m].rules.split('\|').every(r => (ret = Validator.validateSingleRule(val, r, curMsgs ? curMsgs[r] : undefined)).status ? true : false)
                 if (!ret.status) {
+                    //设置失败的字段
+                    ret.field = m
                     return ret
                 }
             }
