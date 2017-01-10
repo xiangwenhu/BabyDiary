@@ -227,7 +227,8 @@ const styles = StyleSheet.create({
         fontSize: 12
     },
     scrollView: {
-        justifyContent: 'center',
+        marginTop:40,
+        justifyContent: 'flex-start',
         alignItems: 'center',
         height: sHeight - 25,
         width: sWidth
