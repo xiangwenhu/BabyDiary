@@ -34,17 +34,23 @@ let userSchema = new Schema({
   },
   profession: String,
   unlockedTime: Date,
-  avatar: String
+  avatar: String,
+  openId:String //第三方登录的唯一标识
 })
 
 userSchema.index({ userName: 1 })
 
-userSchema.statics.findByName = (name, cb) => {
+userSchema.statics.findByPhone = (phone, cb) => {
   return this.find({
-    userName: new RegExp(name, 'i')
+    phone: phone
   }, cb)
 }
 
+userSchema.statics.findByEmail = (email, cb) => {
+  return this.find({
+    email: email
+  }, cb)
+}
 
 
 module.exports = userSchema

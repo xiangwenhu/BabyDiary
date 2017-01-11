@@ -27,8 +27,8 @@ module.exports = {
             },
             "message": "User validation failed",
             "name": "ValidationError"
-        } */  
-             
+        } */
+
         if (err && err.errors) {
             return Promise.resolve({
                 status: false,
@@ -57,6 +57,44 @@ module.exports = {
                 "__v": 0
             }        
         } */
+
+        //手机唯一性
+        if (user.phone) {
+            let phone = await UserModel.findOne({ phone: user.phone }).exec().catch(err => {
+                return {
+                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : 'Mongo操作内部错误'),
+                    status: false,
+                    code: err.code || 99999
+                }
+            })
+
+            if (phone) {
+                return {
+                    message: '该手机已注册，请更换手机号码或者直接登录',
+                    status: false
+                }
+            }
+        }
+
+        //邮箱唯一性      
+        if (user.email) {
+            let phone = await UserModel.findOne({ email: user.email }).exec().catch(err => {
+                return {
+                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : 'Mongo操作内部错误'),
+                    status: false,
+                    code: err.code || 99999
+                }
+            })
+            
+            if (phone) {
+                return {
+                    message: '该邮箱已注册，请更换邮箱或者直接登录',
+                    status: false
+                }
+            }
+        }
+
+
         let result = await u.save().then(() => { return { data: u, status: true } })
             .catch(err => {
                 console.log(JSON.stringify(err))
