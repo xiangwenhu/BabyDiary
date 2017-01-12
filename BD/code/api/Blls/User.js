@@ -78,7 +78,7 @@ module.exports = {
 
         //邮箱唯一性      
         if (user.email) {
-            let phone = await UserModel.findOne({ email: user.email }).exec().catch(err => {
+            let email = await UserModel.findOne({ email: user.email }).exec().catch(err => {
                 return {
                     message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : 'Mongo操作内部错误'),
                     status: false,
@@ -86,7 +86,7 @@ module.exports = {
                 }
             })
             
-            if (phone) {
+            if (email) {
                 return {
                     message: '该邮箱已注册，请更换邮箱或者直接登录',
                     status: false

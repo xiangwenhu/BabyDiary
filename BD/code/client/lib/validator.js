@@ -89,7 +89,7 @@ class Validator {
     // ruleName min:6 后面为参数
     static validateSingleRule(str, ruleName, msg) {
         let rName = ruleName.split(':')[0],  
-            par = undefined,       
+            par = [],       
             rule = Validator.rules[rName] //获得rule
         if (!rule) {
             return {
@@ -100,7 +100,7 @@ class Validator {
         if(ruleName.split(':').length > 0){
             par = ruleName.split(':').slice(1)
         }
-        let pass = rule.method(str, ...new Set(par))
+        let pass = rule.method(str, ...par)
         if (pass) {
             return { status: true }
         }
@@ -134,7 +134,8 @@ Validator.rules = {
         method:(str,length) =>{
             return str.length >= length
         }
-    }    
+    }
+   
 }
 
 Validator.defaultMessages = {
