@@ -1,5 +1,6 @@
 let UserModel = require('../models/User')
 const crypto = require('crypto')
+let ERROR = require('../consts/ErrorMsg')
 
 module.exports = {
     //注册
@@ -62,7 +63,7 @@ module.exports = {
         if (user.phone) {
             let phone = await UserModel.findOne({ phone: user.phone }).exec().catch(err => {
                 return {
-                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : 'Mongo操作内部错误'),
+                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : ERROR.MONGO_ERROR),
                     status: false,
                     code: err.code || 99999
                 }
@@ -70,7 +71,7 @@ module.exports = {
 
             if (phone) {
                 return {
-                    message: '该手机已注册，请更换手机号码或者直接登录',
+                    message: ERROR.USER_PHONE_REGISTERED,
                     status: false
                 }
             }
@@ -80,15 +81,15 @@ module.exports = {
         if (user.email) {
             let email = await UserModel.findOne({ email: user.email }).exec().catch(err => {
                 return {
-                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : 'Mongo操作内部错误'),
+                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : ERROR.MONGO_ERROR),
                     status: false,
                     code: err.code || 99999
                 }
             })
-            
+
             if (email) {
                 return {
-                    message: '该邮箱已注册，请更换邮箱或者直接登录',
+                    message: ERROR.USER_EMAIL_REGISTERED,
                     status: false
                 }
             }
@@ -99,11 +100,46 @@ module.exports = {
             .catch(err => {
                 console.log(JSON.stringify(err))
                 return {
-                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : 'Mongo操作内部错误'),
+                    message: err.errmsg || (err.errors ? Object.values(err.errors)[0].message : ERROR.MONGO_ERROR),
                     status: false,
                     code: err.code || 99999
                 }
             })
         return result
+    },
+    //type phone|userName|email
+    async login(identifier, pwd, type = 'phone') {   
+        try {           
+            let user = await UserModel.findOne({ [type]: identifier }).exec()          
+            if (user) {
+                let cryPwd = crypto.createHash('md5').update(pwd).digest('hex')
+                if (user.pwd == cryPwd) {
+                    return {
+                        status: true,
+                        code: 100000
+                    }
+                }
+                return {
+                    status: false,
+                    code: 200002,
+                    message: ERROR.USER_PWD_ERROR
+                }
+            } else {
+                return {
+                    status: false,
+                    message: ERROR.USER_UNREGISTER,
+                    code: 200001
+                }
+            }
+
+        } catch (err) {
+            console.log('error:' + err)
+            return {
+                status: false,
+                message: err.message || ERROR.SERVER_ERROR
+            }
+        }
+
     }
+
 }

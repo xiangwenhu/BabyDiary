@@ -11,10 +11,12 @@ const router = new Router({
 router.post('/register', async (ctx) => {
     console.log('body:' + JSON.stringify(ctx.request.body))
     let result = await User.register(ctx.request.body)
-    ctx.body = {
-        status: result.status,
-        message: result.status? null: result.message
-    }
+    ctx.body = result
+})
+.post('/login', async(ctx)=>{
+    let {phone,pwd} = ctx.request.body 
+    let result = await User.login(phone,pwd)
+    ctx.body = result  
 })
 
 
